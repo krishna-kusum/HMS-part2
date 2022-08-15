@@ -45,17 +45,17 @@ public class ValidateUserServiceImpl implements ValidateUserService {
 
 	@Override
 	public boolean isPatient(String id, String Password) {
-		return loginDaoImpl.validate(id, Password);
+		return loginDaoImpl.validate(id, Password,3);
 	}
 
 	@Override
 	public boolean isDoctor(String id, String Password) {
-		return loginDaoImpl.validate(id, Password);
+		return loginDaoImpl.validate(id, Password,2);
 	}
 
 	@Override
 	public boolean isAdmin(String id, String Password) {
-		return loginDaoImpl.validate(id, Password);
+		return loginDaoImpl.validate(id, Password,1);
 	}
 
 	@Override

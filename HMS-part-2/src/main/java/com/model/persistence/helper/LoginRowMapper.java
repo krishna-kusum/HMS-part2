@@ -12,8 +12,8 @@ public class LoginRowMapper implements RowMapper<Login>{
 	@Override
 	public Login mapRow(ResultSet rs, int rowNum) throws SQLException {
 
-		String id = rs.getString(1);
-		String password = rs.getString(2);
+		String id = rs.getString("id");
+		String password = rs.getString("password");
 		
 		Login login = new Login(id, password);
 		return login;

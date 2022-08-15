@@ -1,19 +1,12 @@
 package com.model.persistence;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
-import com.bean.Doctor;
 import com.bean.Login;
-import com.model.persistence.helper.DoctorRowMapper;
 import com.model.persistence.helper.LoginRowMapper;
 
 //create login credentials bean 
@@ -28,12 +21,19 @@ public class LoginDaoImpl implements LoginDao {
 	}
 
 	@Override
-	public boolean validate(String id, String password) {
+	public boolean validate(String id, String password,int priority) {
 		String pssd = "";
 		
 		try {
+			String query = "";
+			if(priority == 1) {
+				query="select * from admin_login where id=?";
+			}else if (priority == 2) {
+				query="select * from doctor_login where id=?";
+			}else if(priority == 3) {
+				query="select * from patient_login where id=?";
+			}
 			
-			String query="select password from login_credentials where id=?";
 			Login login= jdbcTemplate.queryForObject(query,new LoginRowMapper(),id);
 			
 			

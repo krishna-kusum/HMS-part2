@@ -68,19 +68,19 @@ public class controller {
 		String userName = request.getParameter("user");
 		String password = request.getParameter("pass");
 		
-//		if(validate.isAdmin(userName, password)) {
-//			modelAndView.setViewName("adminPostLogin");
-//		}
-//		else if(validate.isDoctor(userName, password)) {
-//			modelAndView.setViewName("doctorPostLogin");
-//		}
-//		else if(validate.isPatient(userName, password)) {
-//			modelAndView.setViewName("patientPostLogin");
-//		}
-		
-		if(userName.equalsIgnoreCase("Admin") && password.equalsIgnoreCase("123")) {
+		 if(validate.isAdmin(userName, password)) {
 			modelAndView.setViewName("adminPostLogin");
 		}
+		else if(validate.isDoctor(userName, password)) {
+			modelAndView.setViewName("doctorPostLogin");
+		}else if(validate.isPatient(userName, password)) {
+			modelAndView.setViewName("patientPostLogin");
+		} 
+		 
+		
+//		if(userName.equalsIgnoreCase("Admin") && password.equalsIgnoreCase("123")) {
+//			modelAndView.setViewName("adminPostLogin");
+//		}
 		
 		
 		
