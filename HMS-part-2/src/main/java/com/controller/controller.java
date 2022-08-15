@@ -1,5 +1,7 @@
 package com.controller;
 
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +16,7 @@ import com.model.persistence.PatientDao;
 import com.model.service.AdminService;
 import com.model.service.DoctorService;
 import com.model.service.PatientService;
+import com.model.service.PatientServiceImpl;
 import com.model.service.ValidateUserService;
 
 
@@ -87,14 +90,16 @@ public class controller {
 	
 	
 //  Adding Patient--------------------------------------------------------------------------------------------------------------------------------------
-	
-	
+	@Autowired
+	private PatientServiceImpl impl;
 	@RequestMapping("/savePatient")
 	public ModelAndView savePatientController(HttpServletRequest request) {
 		ModelAndView modelAndView = new ModelAndView();
-
+		
 		Patient patient = new Patient();
-
+		patient.setCounter(impl.getLastPatientId());
+		
+		patient.setPersonId("P" + patient.getCounter());
 		patient.setName(request.getParameter("pName"));
 		patient.setAge(Integer.parseInt(request.getParameter("pAge")));
 		patient.setGender(request.getParameter("pGender"));
@@ -148,7 +153,10 @@ public class controller {
 	
 //  Remove Doctor
 
-	
+	@RequestMapping("/removeDoctorByID")
+	public ModelAndView removeDoctorByIdController() {
+		return new ModelAndView("DoctorIdAccepter");
+	}
 	@RequestMapping("/removeDoctor")
 public ModelAndView removeDoctorController(HttpServletRequest request) {
 		ModelAndView modelAndView = new ModelAndView();
@@ -190,5 +198,18 @@ public ModelAndView removeDoctorController(HttpServletRequest request) {
 		}
 		return modelAndView;
 	}
+//	@RequestMapping("/showAppointment")
+//	public ModelAndView showAppointmentController() {
+//		List<String> appointmentDoc = doctorService.getMyAppointments(id, 2);
+//		if(appointmentDoc.isEmpty()) {
+//			System.out.println("No appointments requested.");
+//			break;
+//		}
+//		else {
+//			System.out.println("Displaying all appointments: ");
+//			for(String appointment: appointmentDoc)
+//				System.out.println(appointment);
+//		}
+//	}
 
 }
