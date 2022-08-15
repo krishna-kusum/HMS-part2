@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Insert title here</title>
+</head>
+<body>
+
+<h2>Patient Detail</h2>
+<table border="1">
+	<tr>
+		<th>Patient ID</th>
+		<th>Name</th>
+		<th>Gender</th>
+		<th>Age</th>
+		<th>Contact No.</th>
+		<th>Symptoms</th>
+	</tr>
+	<tr>
+		<td th:text="${patient.pId}"></td>
+		<td th:text="${patient.pName}"></td>
+		<td th:text="${patient.pGender}"></td>
+		<td th:text="${patient.pAge}"></td>
+		<td th:text="${patient.pContact}"></td>
+		<td th:text="${patient.pSymptoms}"></td>
+	</tr>
+</table>
+</body>
+</html>
