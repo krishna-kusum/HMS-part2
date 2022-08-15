@@ -1,6 +1,7 @@
 package com.controller;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -60,10 +61,13 @@ public class controller {
 	
 	
 	@RequestMapping("/validate")
-	public ModelAndView validationController(HttpServletRequest request) {
+	public ModelAndView validationController(HttpServletRequest request,HttpSession session) {
 		ModelAndView modelAndView=new ModelAndView();
+		
 		String userName = request.getParameter("user");
 		String password = request.getParameter("pass");
+
+		session.setAttribute("userName", userName);
 		
 		 if(validate.isAdmin(userName, password)) {
 			modelAndView.setViewName("adminPostLogin");
@@ -90,11 +94,12 @@ public class controller {
 	
 	
 	@RequestMapping("/savePatient")
-	public ModelAndView savePatientController(HttpServletRequest request) {
+	public ModelAndView savePatientController(HttpServletRequest request,HttpSession session) {
 		ModelAndView modelAndView = new ModelAndView();
-
+		String pId = (String) session.getAttribute("userName");
 		Patient patient = new Patient();
 
+		patient.setPersonId(pId);
 		patient.setName(request.getParameter("pName"));
 		patient.setAge(Integer.parseInt(request.getParameter("pAge")));
 		patient.setGender(request.getParameter("pGender"));
@@ -175,7 +180,7 @@ public ModelAndView removeDoctorController(HttpServletRequest request) {
 		return new ModelAndView("PatientEnterId");
 	}
 	@RequestMapping("/viewPatient")
-	public ModelAndView viewPatientController(HttpServletRequest request) {
+	public ModelAndView viewPatientController(HttpServletRequest request,HttpSession session) {
 		ModelAndView modelAndView = new ModelAndView();
 
 		Patient patient = doctorService.getPatientProfile(request.getParameter("pId"));
@@ -189,6 +194,16 @@ public ModelAndView removeDoctorController(HttpServletRequest request) {
 			modelAndView.setViewName("Output");
 		}
 		return modelAndView;
+	}
+	
+	// Patient Functionalities --------------------------------------------------------------------------------------------------------------------
+	
+	public ModelAndView showPatient(HttpServletRequest request) {
+		
+		ModelAndView modelAndView = new ModelAndView();
+		
+		return modelAndView;
+		
 	}
 
 }
