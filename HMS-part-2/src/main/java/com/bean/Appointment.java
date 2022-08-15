@@ -15,6 +15,7 @@ public class Appointment {
 	private String patientName;
 	private Time slot;
 	private Date date;
+	private String doctorId;
 	private String doctorName;
 	private String department;
 	
