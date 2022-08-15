@@ -1,5 +1,7 @@
 package com.controller;
 
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
@@ -15,6 +17,7 @@ import com.model.persistence.PatientDao;
 import com.model.service.AdminService;
 import com.model.service.DoctorService;
 import com.model.service.PatientService;
+import com.model.service.PatientServiceImpl;
 import com.model.service.ValidateUserService;
 
 
@@ -91,15 +94,16 @@ public class controller {
 	
 	
 //  Adding Patient--------------------------------------------------------------------------------------------------------------------------------------
-	
-	
+	@Autowired
+	private PatientServiceImpl impl;
 	@RequestMapping("/savePatient")
 	public ModelAndView savePatientController(HttpServletRequest request,HttpSession session) {
 		ModelAndView modelAndView = new ModelAndView();
-		String pId = (String) session.getAttribute("userName");
+		
 		Patient patient = new Patient();
-
-		patient.setPersonId(pId);
+		patient.setCounter(impl.getLastPatientId());
+		
+		patient.setPersonId("P" + patient.getCounter());
 		patient.setName(request.getParameter("pName"));
 		patient.setAge(Integer.parseInt(request.getParameter("pAge")));
 		patient.setGender(request.getParameter("pGender"));
@@ -132,12 +136,16 @@ public class controller {
 		ModelAndView modelAndView = new ModelAndView();
 		Doctor doctor = new Doctor();
 		
+//		doctor.setCounter();
+		
+//		doctor.setPersonId("D" + patient.getCounter());
+		
 		doctor.setName(request.getParameter("dName"));
 		doctor.setAge(Integer.parseInt(request.getParameter("dAge")));
 		doctor.setGender(request.getParameter("dGender"));
 		doctor.setExperienceInYears(Integer.parseInt(request.getParameter("dExperience")));
-		doctor.setContactNumber(request.getParameter("pContact"));
-		doctor.setAddress(request.getParameter("pAddress"));
+		doctor.setContactNumber(request.getParameter("dContact"));
+		doctor.setAddress(request.getParameter("dAddress"));
 		doctor.setDepartment(request.getParameter("dDepartment"));
 		
 		String message = null;
@@ -153,7 +161,10 @@ public class controller {
 	
 //  Remove Doctor
 
-	
+	@RequestMapping("/removeDoctorByID")
+	public ModelAndView removeDoctorByIdController() {
+		return new ModelAndView("DoctorIdAccepter");
+	}
 	@RequestMapping("/removeDoctor")
 public ModelAndView removeDoctorController(HttpServletRequest request) {
 		ModelAndView modelAndView = new ModelAndView();
@@ -182,6 +193,7 @@ public ModelAndView removeDoctorController(HttpServletRequest request) {
 	@RequestMapping("/viewPatient")
 	public ModelAndView viewPatientController(HttpServletRequest request,HttpSession session) {
 		ModelAndView modelAndView = new ModelAndView();
+		
 
 		Patient patient = doctorService.getPatientProfile(request.getParameter("pId"));
 		if (patient != null) {
@@ -198,12 +210,43 @@ public ModelAndView removeDoctorController(HttpServletRequest request) {
 	
 	// Patient Functionalities --------------------------------------------------------------------------------------------------------------------
 	
-	public ModelAndView showPatient(HttpServletRequest request) {
-		
+//	public ModelAndView showPatient(HttpServletRequest request) {
+//		
+//		ModelAndView modelAndView = new ModelAndView();
+//		
+//		return modelAndView;
+//		
+//	}
+	
+	@RequestMapping("/showPatient")
+	public ModelAndView showPatientController(HttpSession session) {
 		ModelAndView modelAndView = new ModelAndView();
 		
+
+		Patient patient = doctorService.getPatientProfile((String)session.getAttribute("userName"));
+		if (patient != null) {
+			modelAndView.addObject("patient", patient);
+			modelAndView.setViewName("ShowPatient");
+		}
+		else {
+			String message="Patient with ID "+(String)session.getAttribute("userName")+" does not exist!";
+			modelAndView.addObject("message", message);
+			modelAndView.setViewName("Output");
+		}
 		return modelAndView;
-		
 	}
+//	@RequestMapping("/showAppointment")
+//	public ModelAndView showAppointmentController() {
+//		List<String> appointmentDoc = doctorService.getMyAppointments(id, 2);
+//		if(appointmentDoc.isEmpty()) {
+//			System.out.println("No appointments requested.");
+//			break;
+//		}
+//		else {
+//			System.out.println("Displaying all appointments: ");
+//			for(String appointment: appointmentDoc)
+//				System.out.println(appointment);
+//		}
+//	}
 
 }

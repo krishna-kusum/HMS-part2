@@ -60,6 +60,6 @@ public class ValidateUserServiceImpl implements ValidateUserService {
 
 	@Override
 	public boolean registerUser(String id, String Password) {
-		return loginDaoImpl.registerUser(id, Password);
+		return loginDaoImpl.registerUser(id, Password,2);
 	}
 }
