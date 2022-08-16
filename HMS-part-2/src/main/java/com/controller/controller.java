@@ -210,6 +210,8 @@ public ModelAndView removeDoctorController(HttpServletRequest request) {
 		return modelAndView;
 	}
 	
+	
+	
 //	 Patient Functionalities --------------------------------------------------------------------------------------------------------------------
 	
 

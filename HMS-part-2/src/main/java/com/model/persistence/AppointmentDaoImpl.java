@@ -18,6 +18,8 @@ import org.springframework.stereotype.Repository;
 
 import com.bean.Appointment;
 import com.bean.PrevSlots;
+import com.model.persistence.helper.AppointmentRowMapper;
+
 
 @Repository
 public class AppointmentDaoImpl implements AppointmentDao {
@@ -181,42 +183,28 @@ public class AppointmentDaoImpl implements AppointmentDao {
 	
 	@Override
 	public List<Appointment> getAllAppointments(String id, int choice) {
-		
-		List<Appointment> appointments = new ArrayList<>();
+		List<Appointment> appointmentList = null;
 		try{
 			this.connection = connectDB();
 			
 			if(choice == 1) {
-				preparedStatement = connection.prepareStatement("select * from Appointments where patient_id=?");
-
-				preparedStatement.setString(1, id);
-
-				resultSet = preparedStatement.executeQuery();
+				String query = "select * from Appointments where patient_id=?";
+				appointmentList=jdbcTemplate.query(query, new AppointmentRowMapper());
 				
-				while(resultSet.next()) {
-					appointments.add("[AppointmentID: "+resultSet.getInt("appointment_id")+","
-							+ " Slot: "+ resultSet.getTime("slot") +", Date of Appointment: "+ resultSet.getDate("date_of_appointment")  
-							+", DoctorID:" + resultSet.getString("doctor_id") + ", Doctor Name: "+ resultSet.getString("name_of_doctor") +"]");		
-				}
+				
 			}
 			else if(choice == 2) {
-				preparedStatement = connection.prepareStatement("select * from Appointments where doctor_id=?");
-
-				preparedStatement.setString(1, id);
-
-				resultSet = preparedStatement.executeQuery();
+				String query = "select * from Appointments where doctor_id=?";
+				appointmentList=jdbcTemplate.query(query, new AppointmentRowMapper());
 				
-				while(resultSet.next()) {
-					appointments.add("[AppointmentID: "+resultSet.getInt("appointment_id")+","
-							+ " Slot: "+ resultSet.getTime("slot") +", Date of Appointment: "+ resultSet.getDate("date_of_appointment") 
-							+", PatientID:" + resultSet.getString("patient_id") + ", Patient Name: "+ resultSet.getString("name_of_patient") +"]");		
-				}
 			}
 			
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		return appointments;
+		
+		return appointmentList;
+		
 	}
 
 	@Override

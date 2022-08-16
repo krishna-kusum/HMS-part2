@@ -3,6 +3,8 @@ package com.model.service;
 import java.sql.Date;
 import java.util.List;
 
+import com.bean.Appointment;
+
 public interface PatientService {
 
 	void getPatientProfile(String id);
@@ -15,5 +17,5 @@ public interface PatientService {
 
 	boolean cancelAppointmentRequest(int nextInt);
 
-	List<String> getMyAppointments(String pid, int choice);
+	List<Appointment> getMyAppointments(String pid, int choice);
 }

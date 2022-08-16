@@ -3,6 +3,8 @@ package com.model.persistence;
 import java.sql.Date;
 import java.util.List;
 
+import com.bean.Appointment;
+
 public interface AppointmentDao {
 
 	void appointment(String patient_id, String doc_id, Date new_date);
@@ -13,5 +15,5 @@ public interface AppointmentDao {
 
 	boolean cancelAppointment(int aid);
 
-	List<String> getAllAppointments(String id, int choice);
+	List<Appointment> getAllAppointments(String id, int choice);
 }
