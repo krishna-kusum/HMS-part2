@@ -242,7 +242,7 @@ public ModelAndView removeDoctorController(HttpServletRequest request) {
 	}
 	
 //	2.1 generate appointment 
-	@RequestMapping("/requestAppointment")
+	@RequestMapping("/generateAppointment")
 	public ModelAndView generateAppointmentController(HttpServletRequest request) {
 		
 		return new ModelAndView("requestAppointmentPage");
@@ -312,18 +312,36 @@ public ModelAndView removeDoctorController(HttpServletRequest request) {
 		
 	}
 	
-//	@RequestMapping("/showAppointment")
-//	public ModelAndView showAppointmentController() {
-//		List<String> appointmentDoc = doctorService.getMyAppointments(id, 2);
-//		if(appointmentDoc.isEmpty()) {
-//			System.out.println("No appointments requested.");
-//			break;
-//		}
-//		else {
-//			System.out.println("Displaying all appointments: ");
-//			for(String appointment: appointmentDoc)
-//				System.out.println(appointment);
-//		}
+	@RequestMapping("/rescheduleAppointment")
+	public ModelAndView rescheduleAppointment() {
+		return null;
+		
+	}
+	
+//	List<String> allAppointments = patientService.getMyAppointments(id, 1);
+//	if(allAppointments.isEmpty()) {
+//		System.out.println("No appointments requested.");
+//		break;
 //	}
+//	else {
+//		System.out.println("Displaying all appointments: ");
+//		for(String appointment: allAppointments)
+//			System.out.println(appointment);
+//	}
+//	System.out.println("Enter appointment id for rescheduling: ");
+//	int aid = sc.nextInt();
+//	System.out.println("Enter new date of appointment");
+//	date = Date.valueOf(str.next());
+//	LocalDate todays = LocalDate.now();
+//	if(date.toString().compareTo(todays.toString()) <= 0) {
+//		System.out.println("Entered date is invalid!!");
+//		break;
+//	}
+//	if(patientService.rescheduleAppointment(aid, date))
+//		System.out.println("Appointment rescheduled");
+//	else
+//		System.out.println("Error occured. Please try again later!!");
+	
+
 
 }
