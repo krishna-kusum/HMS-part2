@@ -50,6 +50,7 @@ public class AppointmentDaoImpl implements AppointmentDao {
 	public void appointment(String patient_id, String doc_id, Date date2) {
 
 		try{
+			String query = "call book_appointment(?,?)";
 			this.connection = connectDB();
 			callableStatement=connection.prepareCall("{call book_appointment(?,?)}");
 						
