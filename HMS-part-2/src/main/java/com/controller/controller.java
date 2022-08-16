@@ -3,12 +3,14 @@ package com.controller;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.bean.Appointment;
 import com.bean.Doctor;
 import com.bean.Patient;
 import com.model.persistence.DoctorDao;
@@ -35,6 +37,8 @@ public class controller {
 	private AdminService adminService;
 	@Autowired
 	private DoctorService doctorService;
+	@Autowired
+	private PatientServiceImpl patientService;
 	
 	@RequestMapping("/")
 	public ModelAndView homePageController() {
@@ -63,10 +67,13 @@ public class controller {
 	
 	
 	@RequestMapping("/validate")
-	public ModelAndView validationController(HttpServletRequest request) {
+	public ModelAndView validationController(HttpServletRequest request,HttpSession session) {
 		ModelAndView modelAndView=new ModelAndView();
+		
 		String userName = request.getParameter("user");
 		String password = request.getParameter("pass");
+
+		session.setAttribute("userName", userName);
 		
 		 if(validate.isAdmin(userName, password)) {
 			modelAndView.setViewName("adminPostLogin");
@@ -89,15 +96,14 @@ public class controller {
 	}
 	
 	
-//  Adding Patient--------------------------------------------------------------------------------------------------------------------------------------
-	@Autowired
-	private PatientServiceImpl impl;
+//  Registering Patient--------------------------------------------------------------------------------------------------------------------------------------
+	
 	@RequestMapping("/savePatient")
-	public ModelAndView savePatientController(HttpServletRequest request) {
+	public ModelAndView savePatientController(HttpServletRequest request,HttpSession session) {
 		ModelAndView modelAndView = new ModelAndView();
 		
 		Patient patient = new Patient();
-		patient.setCounter(impl.getLastPatientId());
+		patient.setCounter(patientService.getLastPatientId());
 		
 		patient.setPersonId("P" + patient.getCounter());
 		patient.setName(request.getParameter("pName"));
@@ -132,12 +138,16 @@ public class controller {
 		ModelAndView modelAndView = new ModelAndView();
 		Doctor doctor = new Doctor();
 		
+//		doctor.setCounter();
+		
+//		doctor.setPersonId("D" + patient.getCounter());
+		
 		doctor.setName(request.getParameter("dName"));
 		doctor.setAge(Integer.parseInt(request.getParameter("dAge")));
 		doctor.setGender(request.getParameter("dGender"));
 		doctor.setExperienceInYears(Integer.parseInt(request.getParameter("dExperience")));
-		doctor.setContactNumber(request.getParameter("pContact"));
-		doctor.setAddress(request.getParameter("pAddress"));
+		doctor.setContactNumber(request.getParameter("dContact"));
+		doctor.setAddress(request.getParameter("dAddress"));
 		doctor.setDepartment(request.getParameter("dDepartment"));
 		
 		String message = null;
@@ -183,8 +193,9 @@ public ModelAndView removeDoctorController(HttpServletRequest request) {
 		return new ModelAndView("PatientEnterId");
 	}
 	@RequestMapping("/viewPatient")
-	public ModelAndView viewPatientController(HttpServletRequest request) {
+	public ModelAndView viewPatientController(HttpServletRequest request,HttpSession session) {
 		ModelAndView modelAndView = new ModelAndView();
+		
 
 		Patient patient = doctorService.getPatientProfile(request.getParameter("pId"));
 		if (patient != null) {
@@ -198,6 +209,90 @@ public ModelAndView removeDoctorController(HttpServletRequest request) {
 		}
 		return modelAndView;
 	}
+	
+//	 Patient Functionalities --------------------------------------------------------------------------------------------------------------------
+	
+
+//	1. view patient profile
+	@RequestMapping("/showPatient")
+	public ModelAndView showPatientController(HttpSession session) {
+		ModelAndView modelAndView = new ModelAndView();
+		
+
+		Patient patient = doctorService.getPatientProfile((String)session.getAttribute("userName"));
+		if (patient != null) {
+			modelAndView.addObject("patient", patient);
+			modelAndView.setViewName("ShowPatient");
+		}
+		else {
+			String message="Patient with ID "+(String)session.getAttribute("userName")+" does not exist!";
+			modelAndView.addObject("message", message);
+			modelAndView.setViewName("Output");
+		}
+		return modelAndView;
+	}
+	
+//	2. request appointment
+	@RequestMapping("/requestAppointment")
+	public ModelAndView requestAppointmentController(HttpServletRequest request) {
+		
+		return new ModelAndView("requestAppointmentPage");
+	}
+	
+	
+//	3. cancel appointment
+	@RequestMapping("/cancelAppointment")
+	public ModelAndView cancelAppointmentController(HttpServletRequest request, HttpSession session) {
+		ModelAndView modelAndView = new ModelAndView();
+		
+		String id = (String)session.getAttribute("userName");
+		List<Appointment> appointments = patientService.getMyAppointments(id, 1);
+		
+		
+		if(!appointments.isEmpty()) {
+			modelAndView.addObject("appointmentList", appointments);
+			modelAndView.setViewName("cancelAppointment");
+		}
+		else {
+			String message="No appointments to delete";
+			modelAndView.addObject("message", message);
+			modelAndView.setViewName("Output");
+		}
+		
+		return modelAndView;
+	}
+	
+//	3.1
+	@RequestMapping("/deleteAppointment")
+	public ModelAndView deleteAppointmentController(HttpServletRequest request, HttpSession session) {
+		ModelAndView modelAndView = new ModelAndView();
+		int id = Integer.parseInt(request.getParameter("appointmentId"));
+
+		String message = "";
+
+		if(patientService.cancelAppointmentRequest(id)) {
+			message="Appointment with ID "+id+" deleted successfully!";
+			
+		}else {
+			message="Appointment with ID "+id+" does not exist!";
+		}
+		
+		modelAndView.addObject("message", message);
+		modelAndView.setViewName("Output");
+		return modelAndView;
+	}
+	
+//	4. view all appointments
+	@RequestMapping("/viewAllAppointments")
+	public ModelAndView viewAllAppointmentsController(HttpServletRequest request) {
+		ModelAndView modelAndView = new ModelAndView();
+		
+		
+		
+		
+		return modelAndView;
+	}
+	
 //	@RequestMapping("/showAppointment")
 //	public ModelAndView showAppointmentController() {
 //		List<String> appointmentDoc = doctorService.getMyAppointments(id, 2);

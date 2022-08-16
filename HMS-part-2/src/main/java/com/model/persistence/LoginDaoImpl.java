@@ -52,12 +52,19 @@ public class LoginDaoImpl implements LoginDao {
 
 
 	@Override
-	public boolean registerUser(String id, String password) {
+	public boolean registerUser(String id, String password,int priority) {
 		
 		int rows = 0;
+		String query = null;
 		try {
-			String query="INSERT INTO login_credentials values(?,?)";
-			rows= jdbcTemplate.update(query,new LoginRowMapper(),id,password);
+			if(priority == 2) {
+				
+				query="INSERT INTO doctor_login values(?,?)";
+			}else if(priority == 3) {
+				
+				query="INSERT INTO patient_login values(?,?)";
+			}
+			rows= jdbcTemplate.update(query,id,password);
 			
 			if(rows >0 ) 
 				return true;

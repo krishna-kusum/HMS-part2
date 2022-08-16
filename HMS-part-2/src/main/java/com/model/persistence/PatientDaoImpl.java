@@ -56,7 +56,7 @@ public class PatientDaoImpl implements PatientDao {
 		try{
 			
 			String query = "INSERT INTO PATIENT values(?,?,?,?,?,?,?)";
-			rows = jdbcTemplate.update(query, new PatientRowMapper(),
+			rows = jdbcTemplate.update(query,
 					patient.getPersonId(),
 					patient.getName(),
 					patient.getGender(),
@@ -78,7 +78,6 @@ public class PatientDaoImpl implements PatientDao {
 
 	@Override
 	public boolean removePatient(String patientId) {
-		// TODO Auto-generated method stub
 		int rows;
 		try{
 
@@ -117,11 +116,11 @@ public class PatientDaoImpl implements PatientDao {
 		int counter = 0;
 		try{
 			
-			String query = "SELECT patient_id FROM PATIENT order by patient_id desc limit 1";
+			String query = "SELECT * FROM PATIENT order by patient_id desc limit 1";
 			Patient patient =  jdbcTemplate.queryForObject(query,new PatientRowMapper());
 
 			String id = patient.getPersonId();
-			if (id.isEmpty()) {
+			if (!id.isEmpty()) {
 				counter = Integer.parseInt(id.substring(1));
 			}
 			else {

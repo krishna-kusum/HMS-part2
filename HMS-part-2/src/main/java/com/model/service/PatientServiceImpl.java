@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.bean.Appointment;
 import com.bean.Patient;
 import com.model.persistence.AppointmentDaoImpl;
 import com.model.persistence.PatientDaoImpl;
@@ -44,7 +45,7 @@ public class PatientServiceImpl implements PatientService {
 	}
 	
 	@Override
-	public List<String> getMyAppointments(String pid, int choice) {
+	public List<Appointment> getMyAppointments(String pid, int choice) {
 		return appointmentDaoImpl.getAllAppointments(pid, choice);
 	}
 

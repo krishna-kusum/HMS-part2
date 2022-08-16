@@ -158,7 +158,7 @@ public class DoctorDaoImpl implements DoctorDao {
 			doctor.setPersonId("D" + (doctor.getCounter()));
 
 			String query = "INSERT INTO DOCTOR values(?,?,?,?,?,?,?,?)";
-			rows = jdbcTemplate.update(query,new DoctorRowMapper(),
+			rows = jdbcTemplate.update(query,
 					doctor.getPersonId(),
 					doctor.getName(),
 					doctor.getDepartment(),
@@ -173,10 +173,10 @@ public class DoctorDaoImpl implements DoctorDao {
 //			e.printStackTrace();
 			return false;
 		}
-		if(rows < 0)
+		if(rows < 1)
 			return false;
 		
-		if(loginDaoImpl.registerUser(doctor.getPersonId(), doctor.getPersonId()))
+		if(loginDaoImpl.registerUser(doctor.getPersonId(), doctor.getPersonId(),2))
 			System.out.println("Id & Password Created successfully");
 		else
 			System.out.println("Credentials not generated");
@@ -208,11 +208,11 @@ public class DoctorDaoImpl implements DoctorDao {
 		int counter = 0;
 		try{
 			
-			String query = "SELECT doctor_id FROM DOCTOR order by doctor_id desc";
+			String query = "SELECT * FROM DOCTOR order by doctor_id desc limit 1";
 			Doctor doctor =  jdbcTemplate.queryForObject(query,new DoctorRowMapper());
 
 			String id = doctor.getPersonId();
-			if (id.isEmpty()) {
+			if (!id.isEmpty()) {
 //				System.out.println(id);
 				counter = Integer.parseInt(id.substring(1));
 			}
