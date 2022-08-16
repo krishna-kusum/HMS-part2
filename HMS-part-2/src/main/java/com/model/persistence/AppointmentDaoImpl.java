@@ -189,13 +189,13 @@ public class AppointmentDaoImpl implements AppointmentDao {
 			
 			if(choice == 1) {
 				String query = "select * from Appointments where patient_id=?";
-				appointmentList=jdbcTemplate.query(query, new AppointmentRowMapper());
+				appointmentList=jdbcTemplate.query(query, new AppointmentRowMapper(),id);
 				
 				
 			}
 			else if(choice == 2) {
 				String query = "select * from Appointments where doctor_id=?";
-				appointmentList=jdbcTemplate.query(query, new AppointmentRowMapper());
+				appointmentList=jdbcTemplate.query(query, new AppointmentRowMapper(),id);
 				
 			}
 			

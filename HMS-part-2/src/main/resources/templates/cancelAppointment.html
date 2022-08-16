@@ -8,6 +8,7 @@
 <h2>Appointments </h2>
 <table border="1">
 	<tr>
+		<th>Appointment ID</th>
 		<th>Patient ID</th>
 		<th>Name</th>
 		<th>Slot</th>
@@ -16,7 +17,8 @@
 		<th>Doctor's Name</th>
 		<th>Department</th>
 	</tr>
-	<tr th:each="appointment : ${appointments}">
+	<tr th:each="appointment : ${appointmentList}">
+		<td th:text="${appointment.appointmentId}"></td>
 		<td th:text="${appointment.patientId}"></td>
 		<td th:text="${appointment.patientName}"></td>
 		<td th:text="${appointment.slot}"></td>

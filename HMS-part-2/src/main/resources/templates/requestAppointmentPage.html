@@ -5,6 +5,18 @@
 <title>Insert title here</title>
 </head>
 <body>
-
+<form action="/generatePatient" method="post">
+	Enter Patient Name : <input type="text" name="pName"><br><br>
+	Enter Patient Age : <input type="text" name="pAge"><br><br>
+	Enter Patient Gender : <select name="pGender">
+	<option value="Male">M</option>
+	<option value="Female">F</option>
+	</select><br> <br>
+	Enter Patient Contact Number : <input type="text" name="pContact"><br><br>
+	Enter Patient Address : <input type="text" name="pAddress"><br><br>
+	Enter Patient Symptoms :<input type="text" name="pSymptom"><br><br>
+	<input type="submit" value="Generate Appointment">
+	
+</form>
 </body>
 </html>

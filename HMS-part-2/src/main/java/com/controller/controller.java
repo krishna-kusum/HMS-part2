@@ -241,7 +241,12 @@ public ModelAndView removeDoctorController(HttpServletRequest request) {
 		return new ModelAndView("requestAppointmentPage");
 	}
 	
-	
+//	2.1 generate appointment 
+	@RequestMapping("/requestAppointment")
+	public ModelAndView generateAppointmentController(HttpServletRequest request) {
+		
+		return new ModelAndView("requestAppointmentPage");
+	}
 //	3. cancel appointment
 	@RequestMapping("/cancelAppointment")
 	public ModelAndView cancelAppointmentController(HttpServletRequest request, HttpSession session) {
@@ -286,13 +291,25 @@ public ModelAndView removeDoctorController(HttpServletRequest request) {
 	
 //	4. view all appointments
 	@RequestMapping("/viewAllAppointments")
-	public ModelAndView viewAllAppointmentsController(HttpServletRequest request) {
+	public ModelAndView viewAllAppointmentsController(HttpServletRequest request, HttpSession session) {
 		ModelAndView modelAndView = new ModelAndView();
 		
+		String id = (String) session.getAttribute("userName");
+		List<Appointment> appointments = patientService.getMyAppointments(id, 1);
 		
 		
+		if(!appointments.isEmpty()) {
+			modelAndView.addObject( "myAppointmentList", appointments);
+			modelAndView.setViewName("ShowMyAppointments");
+		}
+		else {
+			String message="No appointments to display";
+			modelAndView.addObject("message", message);
+			modelAndView.setViewName("Output");
+		}
 		
 		return modelAndView;
+		
 	}
 	
 //	@RequestMapping("/showAppointment")

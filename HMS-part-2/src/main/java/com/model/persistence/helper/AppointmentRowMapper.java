@@ -21,8 +21,9 @@ public class AppointmentRowMapper implements RowMapper<Appointment> {
 		String d_id = resultSet.getString("doctor_id");
 		String d_name = resultSet.getString("name_of_doctor");
 		String dept = resultSet.getString("department");
+		int appointment_id = resultSet.getInt("appointment_id");
 		
-		Appointment appointment = new Appointment(p_id,p_name,slot,date_of_appointment,d_id,d_name,dept);
+		Appointment appointment = new Appointment(appointment_id,p_id,p_name,slot,date_of_appointment,d_id,d_name,dept);
 		return appointment;
 	}
 

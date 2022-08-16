@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Appointment {
+	private int appointmentId;
 	private String patientId;
 	private String patientName;
 	private Time slot;
