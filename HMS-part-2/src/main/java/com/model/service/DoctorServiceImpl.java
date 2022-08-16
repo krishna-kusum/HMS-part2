@@ -7,6 +7,7 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.bean.Appointment;
 import com.bean.Patient;
 import com.bean.Schedule;
 import com.model.persistence.AppointmentDaoImpl;
@@ -84,7 +85,7 @@ public class DoctorServiceImpl implements DoctorService {
 	}
 	
 	@Override
-	public List<String> getMyAppointments(String id, int choice) {
+	public List<Appointment> getMyAppointments(String id, int choice) {
 		return appointmentDaoImpl.getAllAppointments(id, choice);
 	}
 

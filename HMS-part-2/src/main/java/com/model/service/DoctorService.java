@@ -4,6 +4,7 @@ import java.sql.Date;
 import java.util.List;
 import java.util.Map;
 
+import com.bean.Appointment;
 import com.bean.Patient;
 import com.bean.Schedule;
 
@@ -21,5 +22,5 @@ public interface DoctorService {
 
 	boolean updateDoctorSchedule(String doctorId, Schedule schedule);
 
-	List<String> getMyAppointments(String pid, int choice);
+	List<Appointment> getMyAppointments(String pid, int choice);
 }

@@ -10,6 +10,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.bean.Appointment;
 import com.bean.Doctor;
 import com.bean.Patient;
 import com.model.persistence.DoctorDao;
@@ -36,6 +37,8 @@ public class controller {
 	private AdminService adminService;
 	@Autowired
 	private DoctorService doctorService;
+	@Autowired
+	private PatientServiceImpl patientService;
 	
 	@RequestMapping("/")
 	public ModelAndView homePageController() {
@@ -93,15 +96,14 @@ public class controller {
 	}
 	
 	
-//  Adding Patient--------------------------------------------------------------------------------------------------------------------------------------
-	@Autowired
-	private PatientServiceImpl impl;
+//  Registering Patient--------------------------------------------------------------------------------------------------------------------------------------
+	
 	@RequestMapping("/savePatient")
 	public ModelAndView savePatientController(HttpServletRequest request,HttpSession session) {
 		ModelAndView modelAndView = new ModelAndView();
 		
 		Patient patient = new Patient();
-		patient.setCounter(impl.getLastPatientId());
+		patient.setCounter(patientService.getLastPatientId());
 		
 		patient.setPersonId("P" + patient.getCounter());
 		patient.setName(request.getParameter("pName"));
@@ -208,16 +210,10 @@ public ModelAndView removeDoctorController(HttpServletRequest request) {
 		return modelAndView;
 	}
 	
-	// Patient Functionalities --------------------------------------------------------------------------------------------------------------------
+//	 Patient Functionalities --------------------------------------------------------------------------------------------------------------------
 	
-//	public ModelAndView showPatient(HttpServletRequest request) {
-//		
-//		ModelAndView modelAndView = new ModelAndView();
-//		
-//		return modelAndView;
-//		
-//	}
-	
+
+//	1. view patient profile
 	@RequestMapping("/showPatient")
 	public ModelAndView showPatientController(HttpSession session) {
 		ModelAndView modelAndView = new ModelAndView();
@@ -235,6 +231,68 @@ public ModelAndView removeDoctorController(HttpServletRequest request) {
 		}
 		return modelAndView;
 	}
+	
+//	2. request appointment
+	@RequestMapping("/requestAppointment")
+	public ModelAndView requestAppointmentController(HttpServletRequest request) {
+		
+		return new ModelAndView("requestAppointmentPage");
+	}
+	
+	
+//	3. cancel appointment
+	@RequestMapping("/cancelAppointment")
+	public ModelAndView cancelAppointmentController(HttpServletRequest request, HttpSession session) {
+		ModelAndView modelAndView = new ModelAndView();
+		
+		String id = (String)session.getAttribute("userName");
+		List<Appointment> appointments = patientService.getMyAppointments(id, 1);
+		
+		
+		if(!appointments.isEmpty()) {
+			modelAndView.addObject("appointmentList", appointments);
+			modelAndView.setViewName("cancelAppointment");
+		}
+		else {
+			String message="No appointments to delete";
+			modelAndView.addObject("message", message);
+			modelAndView.setViewName("Output");
+		}
+		
+		return modelAndView;
+	}
+	
+//	3.1
+	@RequestMapping("/deleteAppointment")
+	public ModelAndView deleteAppointmentController(HttpServletRequest request, HttpSession session) {
+		ModelAndView modelAndView = new ModelAndView();
+		int id = Integer.parseInt(request.getParameter("appointmentId"));
+
+		String message = "";
+
+		if(patientService.cancelAppointmentRequest(id)) {
+			message="Appointment with ID "+id+" deleted successfully!";
+			
+		}else {
+			message="Appointment with ID "+id+" does not exist!";
+		}
+		
+		modelAndView.addObject("message", message);
+		modelAndView.setViewName("Output");
+		return modelAndView;
+	}
+	
+//	4. view all appointments
+	@RequestMapping("/viewAllAppointments")
+	public ModelAndView viewAllAppointmentsController(HttpServletRequest request) {
+		ModelAndView modelAndView = new ModelAndView();
+		
+		
+		
+		
+		return modelAndView;
+	}
+	
 //	@RequestMapping("/showAppointment")
 //	public ModelAndView showAppointmentController() {
 //		List<String> appointmentDoc = doctorService.getMyAppointments(id, 2);

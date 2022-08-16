@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import com.bean.Appointment;
 import com.bean.PrevSlots;
 
 @Repository
@@ -178,9 +179,9 @@ public class AppointmentDaoImpl implements AppointmentDao {
 	}
 	
 	@Override
-	public List<String> getAllAppointments(String id, int choice) {
+	public List<Appointment> getAllAppointments(String id, int choice) {
 		
-		List<String> appointments = new ArrayList<>();
+		List<Appointment> appointments = new ArrayList<>();
 		try{
 			this.connection = connectDB();
 			
