@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.bean.Appointment;
+import com.bean.Schedule;
 import com.model.service.DoctorService;
 
 @Controller
@@ -34,5 +35,22 @@ public class DoctorController {
 			
 			return new ModelAndView("ShowMyAppointments", "myAppointmentList", appointmentDoc);
 		}
+	}
+	
+	
+	@RequestMapping("/viewSchedule")
+	public ModelAndView viewScheduleControllerForDoctor(HttpSession session) {
+		ModelAndView modelAndView = new ModelAndView();
+		Schedule schedule = doctorService.getDoctorSchedule((String) session.getAttribute("userName"));
+		if (schedule != null) {
+			modelAndView.addObject("schedule", schedule);
+			modelAndView.setViewName("ShowMySchedules");
+		}
+		else {
+			String message="No schedules to display !";
+			modelAndView.addObject("message", message);
+			modelAndView.setViewName("Output");
+		}
+		return modelAndView;
 	}
 }
