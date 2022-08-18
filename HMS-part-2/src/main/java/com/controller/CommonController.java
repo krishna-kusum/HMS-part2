@@ -1,5 +1,6 @@
 package com.controller;
 
+import java.sql.Date;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -24,7 +25,7 @@ import com.model.service.ValidateUserService;
 
 
 @Controller
-public class controller {
+public class CommonController {
 	
 	@Autowired
 	private ValidateUserService validate;
@@ -152,9 +153,9 @@ public class controller {
 		
 		String message = null;
 		if (adminService.registerDoctorToDatabase(doctor))
-			message = "Patient Addded Successfully";
+			message = "Doctor Added Successfully";
 		else
-			message = "Patient Addition Failed";
+			message = "Doctor Addition Failed";
 
 		modelAndView.addObject("message", message);
 		modelAndView.setViewName("Output");
@@ -245,7 +246,7 @@ public ModelAndView removeDoctorController(HttpServletRequest request) {
 	@RequestMapping("/generateAppointment")
 	public ModelAndView generateAppointmentController(HttpServletRequest request) {
 		
-		return new ModelAndView("requestAppointmentPage");
+		return new ModelAndView("generateAppointmentPage");
 	}
 //	3. cancel appointment
 	@RequestMapping("/cancelAppointment")
@@ -313,9 +314,45 @@ public ModelAndView removeDoctorController(HttpServletRequest request) {
 	}
 	
 	@RequestMapping("/rescheduleAppointment")
-	public ModelAndView rescheduleAppointment() {
-		return null;
+	public ModelAndView rescheduleAppointmentController(HttpServletRequest request, HttpSession session) {
+		ModelAndView modelAndView = new ModelAndView();
 		
+		String id = (String) session.getAttribute("userName");
+		List<Appointment> appointments = patientService.getMyAppointments(id, 1);
+		
+		
+		if(!appointments.isEmpty()) {
+			modelAndView.addObject( "appointmentList", appointments);
+			modelAndView.setViewName("rescheduleAppointment");
+		}
+		else {
+			String message="No appointments to display";
+			modelAndView.addObject("message", message);
+			modelAndView.setViewName("Output");
+		}
+		
+		return modelAndView;
+		
+	}
+	
+	@RequestMapping("/rescheduleAppointmentTo")
+	public ModelAndView rescheduleAppointmentToController(HttpServletRequest request) {
+		ModelAndView modelAndView = new ModelAndView();
+		
+		int aid = Integer.parseInt(request.getParameter("appointmentId"));
+		Date appointmentDate =Date.valueOf(request.getParameter("appointmentDate"));
+		
+		if(patientService.rescheduleAppointment(aid, appointmentDate)) {
+			String message="Appointment Rescheduled successfully.";
+			modelAndView.addObject("message", message);
+			modelAndView.setViewName("Output");
+		}else{
+			String message="Couldn't reschedule Appointment. Please try again.";
+			modelAndView.addObject("message", message);
+			modelAndView.setViewName("Output");
+		};
+		
+		return modelAndView;
 	}
 	
 //	List<String> allAppointments = patientService.getMyAppointments(id, 1);

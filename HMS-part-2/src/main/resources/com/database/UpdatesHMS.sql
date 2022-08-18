@@ -152,8 +152,9 @@ password varchar(30)
 insert into patient_login
 values("P101","P101");
 
-insert into patient_login
-values("D1000","D1000");
+insert ignore into doctor_login
+values("D1000","D1000"),
+("D1005","D1005");
 
 insert into admin_login
 values("A1001","@dmin$$");

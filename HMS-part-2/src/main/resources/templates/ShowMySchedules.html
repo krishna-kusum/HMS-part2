@@ -6,7 +6,7 @@
 </head>
 <body>
 
-<h2>Patient Detail</h2>
+<h2>Schedule Details</h2>
 <table border="1">
 	<tr>
 		<th>Doctor ID</th>
@@ -17,11 +17,11 @@
 		
 	</tr>
 	<tr>
-		<td th:text="${patient.doctor_id}"></td>
-		<td th:text="${patient.name_of_doctor}"></td>
-		<td th:text="${patient.available_day}"></td>
-		<td th:text="${patient.slot_start}"></td>
-		<td th:text="${patient.slot_end}"></td>
+		<td th:text="${schedule.doctor_id}"></td>
+		<td th:text="${schedule.name_of_doctor}"></td>
+		<td th:text="${schedule.available_day}"></td>
+		<td th:text="${schedule.slot_start}"></td>
+		<td th:text="${schedule.slot_end}"></td>
 		
 	</tr>
 </table>

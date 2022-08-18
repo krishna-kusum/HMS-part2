@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -80,10 +81,12 @@ public class AppointmentDaoImpl implements AppointmentDao {
 				
 				if(a != 0) {
 					storeAppointment(p_id, p_name, new_slot, date, d_id, d_name, dept);
-					System.out.println(p_id+" "+p_name+" "+new_slot+" "+date+" "+d_id+" "+d_name+" "+dept);
+//					System.out.println(p_id+" "+p_name+" "+new_slot+" "+date+" "+d_id+" "+d_name+" "+dept);
 				}
-				else
-					System.out.println("No slot present for the date :"+date);
+				else {
+					
+				}
+//					System.out.println("No slot present for the date :"+date);
 				
 			}		
 
@@ -212,14 +215,13 @@ public class AppointmentDaoImpl implements AppointmentDao {
 		int rows = 0;
 		try {
 			
-			this.connection = connectDB();
-			preparedStatement = connection.prepareStatement("delete from Appointments where appointment_id=?");
+			String query = "delete from Appointments where appointment_id=?";
 
-			preparedStatement.setInt(1, aid);
-
-			rows = preparedStatement.executeUpdate();
-		} catch (SQLException e) {
-			e.printStackTrace();
+			rows = jdbcTemplate.update(query, aid);
+			
+			
+		} catch (EmptyResultDataAccessException e) {
+			return false;
 		}
 		if(rows > 0)
 			return true;
@@ -227,31 +229,27 @@ public class AppointmentDaoImpl implements AppointmentDao {
 	}
 
 	public boolean reschedule(int aid, Date newDate) {
-		int rows = 0;
+		Appointment appointment = null;
 		try {
 			
-			this.connection = connectDB();
-			preparedStatement = connection.prepareStatement("select patient_id,"
-					+ "doctor_id,"
-					+ "department from Appointments where appointment_id=?");
-
-			preparedStatement.setInt(1, aid);
-
-			resultSet = preparedStatement.executeQuery();
+			String query = "select * from Appointments where appointment_id=?";
+			appointment=jdbcTemplate.queryForObject(query, new AppointmentRowMapper(),aid);
 			
-			if(resultSet.next()) {
-				if(cancelAppointment(aid)) {
-					appointment(resultSet.getString("patient_id"), resultSet.getString("doctor_id"), newDate);
-					rows = 1;
-				} 
+			if(appointment == null) {
+				return false;
 			}
 			
-		} catch (SQLException e) {
-			e.printStackTrace();
+			String patient_id = appointment.getPatientId();
+			String doctor_id = appointment.getDoctorId();
+
+				if(cancelAppointment(aid)) {
+					appointment(patient_id,doctor_id, newDate);
+				} 
+			
+		} catch (EmptyResultDataAccessException e) {
+			return false;
 		}
-		if(rows > 0)
-			return true;
-		return false;
+		return true;
 	}
 	
 }
